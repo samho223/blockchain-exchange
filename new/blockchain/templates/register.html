@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Register</h1>
+<br>
+<p>if you already have a account, click <a href="/login">here</a> to login.</p>
+<form action="/register" method = "post">
+    <div class="form-group">
+        <input id="username" autocomplete="off" autofocus class="form-control" name="username" placeholder="username" type="text">
+    </div>
+    <div class="form-group">
+        <p>The password should contain at least 8 characters, including a letter and a number.</p>
+        <input id="pass" autocomplete="off"  class="form-control" name="password" placeholder="password" type="password">
+    </div>
+    <div class="form-group">
+        <input id="confirm-pass" autocomplete="off"  class="form-control" name="confirm-pass" placeholder="confirm password" type="password">
+    </div>
+    <div class="form-group">
+        <input id="email" autocomplete="off"  class="form-control" name="email" placeholder="email" type="email">
+    </div>
+    <button id="submit" class="btn btn-primary" type="submit">Register</button>
+
+</form>
+{% endblock %}

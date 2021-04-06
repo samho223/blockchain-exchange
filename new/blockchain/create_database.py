@@ -34,7 +34,7 @@ database_path = current_path + '\\'
 database_name = "test.sqlite"
 connection = create_connection(database_path + database_name)
 
-cur = connection.cursor()
+
 
 # create a table that stores user info
 create_table_users = """
@@ -46,15 +46,8 @@ CREATE TABLE IF NOT EXISTS users(
   );
 """
 
-create_table_transactions = """
-CREATE TABLE IF NOT EXISTS transactions(
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  sender TEXT NOT NULL,
-  recipient TEXT NOT NULL,
-  type TEXT NOT NULL,
-  amount NUMERIC NOT NULL
-  );
-"""
-execute_query(connection, create_table_users)  
-execute_query(connection, create_table_transactions)  
 
+cur = connection.cursor()
+row= cur.execute("select * from users where name = 123")
+connection.commit()
+print(row.fetchall()[0][1])

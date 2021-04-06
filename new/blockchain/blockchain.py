@@ -38,7 +38,8 @@ from flask import Flask, jsonify, request, render_template, redirect, url_for, s
 from flask_cors import CORS
 from functools import wraps
 
-
+import sqlite3
+from sqlite3 import Error
 
 MINING_SENDER = "THE BLOCKCHAIN"
 MINING_REWARD = 1
@@ -226,6 +227,25 @@ CORS(app)
 # Instantiate the Blockchain
 blockchain = Blockchain()
 app.secret_key = 'my precious'
+app.database='test.sqlite'
+
+def create_connection(path):
+    connection = None
+    try:
+        connection = sqlite3.connect(path)
+        print('successfully connect to db')
+    except Error as e:
+        print(f"The error '{e}' occur")
+    return connection
+
+def execute_query(connection, query):
+    cursor = connection.cursor()
+    try:
+        cursor.execute(query)
+        connection.commit()
+        print('cursor execute successfully')
+    except Error as e:
+        print(f"The error '{e}' occur")
 
 #################################################
 # login required decorator
@@ -249,19 +269,41 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
+    
+    session.clear()
+    
+    connection = create_connection(app.database)
+    cur = connection.cursor()
+    
     if request.method == 'POST':
-        if request.form['username'] != 'admin' or request.form['password'] != 'admin':
-            error = 'Invalid Credentials. Please try again.'
-        else:
-            session['logged_in'] = True
-            flash('You were logged in.')
-            return redirect(url_for('index'))
-    return render_template('login.html', error=error)
+        
+        if not request.form.get("username"):
+            error='please enter a username'
+            return redirect(url_for('login'))
+        elif not request.form.get("password"):
+            error = 'please enter a password'
+            return redirect(url_for('login'))
+        
+        row = cur.execute("SELECT * FROM users WHERE name = :username",{"username":request.form.get("username")})
+        connection.commit()
+        user=row.fetchall()
+        if len(user) != 1 or request.form.get("password") != user[0][3]:
+            error = 'incorrect user and/or password'
+            return redirect(url_for('login'))
+        
+        
+        # session store the user id.
+        session["logged_in"] = user[0][0]
+        
+        return redirect('/')
+    else:
+        
+        return render_template('login.html', error=error)
 
 @app.route('/logout')
 @login_required
 def logout():
-    session.pop('logged_in', None)
+    session.clear()
     flash('You were logged out.')
     return redirect(url_for('login'))
 
@@ -269,7 +311,40 @@ def logout():
 def configure():
     return render_template('./configure.html')
 
+@app.route('/register', methods=['GET','POST'])
+def register():
+    session.clear()
+    
+    connection = create_connection(app.database)
+    cur = connection.cursor()
+    
+    if request.method == "POST":
+        if not request.form.get("username"):
+            flash('you need to enter a username')
+            return redirect(url_for('register'))
+        elif not request.form.get("password"):
+            flash('you need to enter a password')
+            return redirect(url_for('register'))
+        elif not request.form.get("email"):
+            flash('you need to enter a email')
+            return redirect(url_for('register'))
 
+        elif request.form.get("password") != request.form.get("confirm-pass"):
+            flash('your password is not match')
+            return redirect(url_for('register'))
+        elif cur.execute("SELECT * FROM users WHERE name = :username",{"username":request.form.get("username")}):
+            flash('username already exists.')
+        cur.execute("INSERT INTO users(name,password,email) VALUES (:username,:password,:email)",
+                     {"username" : request.form.get("username"),
+                     "password" : request.form.get("password"),
+                     "email": request.form.get("email")})
+        connection.commit()
+        row= cur.execute("SELECT * FROM users WHERE name = :username",{"username" : request.form.get("username")})
+        connection.commit()
+        session['logged_in'] = row.fetchall()[0][0]
+        return redirect('/')
+    else:
+        return render_template("register.html")
 
 ##########################################################
 
