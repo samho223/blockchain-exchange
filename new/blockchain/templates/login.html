@@ -1,13 +1,61 @@
-{% extends "base.html" %}
-{% block content %}
-<h1>Please login</h1>
+<!DOCTYPE html>
+<html lang="en">
+ 
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Blockchain Frontend</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/vendor/DataTables/css/datatables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="/static/css/custom.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Blockchain Frontend</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+    </nav>
+<br>
+<vr>
+<br>
+    <div class="container">
+
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card-body">
+            <h4 class="card-title">Please login &nbsp;&nbsp;&nbsp;</h4>
+                <form action="" method="post">
+                    <div class="form-group">            
+                      <label for="username">username:</label>
+                      <input type="text" class="from-control" placeholder="Username" name="username" value="{{request.form.username }}">
+                    </div>
+                    <div class="form-group">            
+                      <label for="password">password:</label>
+                      <input type="password" class="from-control" placeholder="Password" name="password" value="{{request.form.password }}">
+                    </div>
+                    <button id="submit" class="btn btn-primary" type="submit">login</button>
+                    <br>
+                    <br>
+                    <p> if you are new to this site, please <a href="/register">register</a> first.</p>
+                </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
 <br>
 
-<form action="" method="post">
-<input type="text" placeholder="Username" name="username" value="{{request.form.username }}">
-<input type="password" placeholder="Password" name="password" value="{{request.form.password }}">
-<input class="btn btn-default" type="submit" value="Login">
-</form>
-<br>
-<p> if you are new to this site, please <a href="/register">register</a> first.</p>
-{% endblock %}
+</body>
+</html>

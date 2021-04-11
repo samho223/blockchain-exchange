@@ -342,9 +342,32 @@ def register():
         row= cur.execute("SELECT * FROM users WHERE name = :username",{"username" : request.form.get("username")})
         connection.commit()
         session['logged_in'] = row.fetchall()[0][0]
-        return redirect('/')
+        return redirect(url_for('wallet_first_time'))
     else:
         return render_template("register.html")
+      
+        
+@app.route('/wallet_first_time',methods=['GET', 'POST'])
+def wallet_first_time():
+	return render_template('./wallet_first_time.html')
+
+@app.route('/wallet',methods=['GET', 'POST'])
+def wallet():
+	return render_template('./wallet.html')
+
+
+@app.route('/wallet/new', methods=['GET'])
+def new_wallet():
+	random_gen = Crypto.Random.new().read
+	private_key = RSA.generate(1024, random_gen)
+	public_key = private_key.publickey()
+	response = {
+		'private_key': binascii.hexlify(private_key.exportKey(format='DER')).decode('ascii'),
+		'public_key': binascii.hexlify(public_key.exportKey(format='DER')).decode('ascii')
+	}
+
+	return jsonify(response), 200 
+
 
 ##########################################################
 

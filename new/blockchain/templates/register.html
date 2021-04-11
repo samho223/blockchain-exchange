@@ -1,23 +1,72 @@
-{% extends "base.html" %}
-{% block content %}
-<h1>Register</h1>
-<br>
-<p>if you already have a account, click <a href="/login">here</a> to login.</p>
-<form action="/register" method = "post">
-    <div class="form-group">
-        <input id="username" autocomplete="off" autofocus class="form-control" name="username" placeholder="username" type="text">
-    </div>
-    <div class="form-group">
-        <p>The password should contain at least 8 characters, including a letter and a number.</p>
-        <input id="pass" autocomplete="off"  class="form-control" name="password" placeholder="password" type="password">
-    </div>
-    <div class="form-group">
-        <input id="confirm-pass" autocomplete="off"  class="form-control" name="confirm-pass" placeholder="confirm password" type="password">
-    </div>
-    <div class="form-group">
-        <input id="email" autocomplete="off"  class="form-control" name="email" placeholder="email" type="email">
-    </div>
-    <button id="submit" class="btn btn-primary" type="submit">Register</button>
+<!DOCTYPE html>
+<html lang="en">
 
-</form>
-{% endblock %}
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Blockchain Frontend</title>
+    <!-- Bootstrap core CSS -->
+    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/vendor/DataTables/css/datatables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="/static/css/custom.css" rel="stylesheet">
+</head>
+  <body>
+  
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Blockchain Frontend</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+    </nav>
+
+      <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card-body">
+            <h4 class="card-title">Register &nbsp;&nbsp;&nbsp;</h4>
+                <p>if you already have a account, click <a href="/login">here</a> to login.</p>
+                <form action="/register" method="post">
+                    <div class="form-group">            
+                      <label for="username">username:</label>
+                      <input id="username" autocomplete="off" autofocus class="form-control" name="username" placeholder="username" type="text">
+                    </div>
+                    <div class="form-group">            
+                      <label for="password">password:</label>
+                      <p>The password should contain at least 8 characters, including a letter and a number.</p>
+                      <input id="pass" autocomplete="off"  class="form-control" name="password" placeholder="password" type="password">
+                    </div>
+                    <div class="form-group">
+                      <input id="confirm-pass" autocomplete="off"  class="form-control" name="confirm-pass" placeholder="confirm password" type="password">
+                    </div>
+                    <div class="form-group">
+                      <input id="email" autocomplete="off"  class="form-control" name="email" placeholder="email" type="email">
+                    </div>
+                    <br>
+                    <button id="submit" class="btn btn-primary" type="submit">Register</button>
+                </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+        document.querySelector('#submit').disabled = true;
+        document.querySelector('#pass').onkeyup = function() {
+            let password = document.querySelector('#pass').value;
+
+            if (password.length > 7 && password.match(/^[0-9a-z]+$/i) && password.match(/\d/) && password.match(/[a-z]/i)){
+                document.querySelector('#submit').disabled = false;
+            }
+            else {
+                document.querySelector('#submit').disabled = true;
+            }
+        }
+    </script>
+  </body>
+</html>
