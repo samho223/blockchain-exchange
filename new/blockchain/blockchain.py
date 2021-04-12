@@ -259,6 +259,11 @@ def login_required(f):
             return redirect(url_for('login'))
     return wrap
 
+@app.route('/home')
+def home():
+    return render_template('./home.html')
+
+
 
 
 @app.route('/')
@@ -317,7 +322,6 @@ def register():
     
     connection = create_connection(app.database)
     cur = connection.cursor()
-    
     if request.method == "POST":
         if not request.form.get("username"):
             flash('you need to enter a username')
@@ -325,19 +329,13 @@ def register():
         elif not request.form.get("password"):
             flash('you need to enter a password')
             return redirect(url_for('register'))
-        elif not request.form.get("email"):
-            flash('you need to enter a email')
-            return redirect(url_for('register'))
 
         elif request.form.get("password") != request.form.get("confirm-pass"):
             flash('your password is not match')
             return redirect(url_for('register'))
-        elif cur.execute("SELECT * FROM users WHERE name = :username",{"username":request.form.get("username")}):
-            flash('username already exists.')
-        cur.execute("INSERT INTO users(name,password,email) VALUES (:username,:password,:email)",
+        cur.execute("INSERT INTO users(name,password) VALUES (:username,:password)",
                      {"username" : request.form.get("username"),
-                     "password" : request.form.get("password"),
-                     "email": request.form.get("email")})
+                     "password" : request.form.get("password"),})
         connection.commit()
         row= cur.execute("SELECT * FROM users WHERE name = :username",{"username" : request.form.get("username")})
         connection.commit()
@@ -355,18 +353,23 @@ def wallet_first_time():
 def wallet():
 	return render_template('./wallet.html')
 
-
 @app.route('/wallet/new', methods=['GET'])
 def new_wallet():
-	random_gen = Crypto.Random.new().read
-	private_key = RSA.generate(1024, random_gen)
-	public_key = private_key.publickey()
-	response = {
+    random_gen = Crypto.Random.new().read
+
+    connection = create_connection(app.database)
+    cur = connection.cursor()
+    user_id = session['logged_in']
+    private_key = RSA.generate(1024, random_gen)
+    public_key = private_key.publickey()
+    response = {
 		'private_key': binascii.hexlify(private_key.exportKey(format='DER')).decode('ascii'),
 		'public_key': binascii.hexlify(public_key.exportKey(format='DER')).decode('ascii')
-	}
+        }
 
-	return jsonify(response), 200 
+    cur.execute("UPDATE users SET public_key = ? WHERE id= ?",(binascii.hexlify(public_key.exportKey(format='DER')).decode('ascii'),str(user_id),))
+    connection.commit()
+    return jsonify(response), 200 
 
 
 ##########################################################
