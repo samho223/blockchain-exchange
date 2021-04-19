@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <br>
+    <br>
+    {% if not current_user.public_key %}
+    <div class="alert alert-warning" role="alert">
+      <h4 class="alert-heading">The Final Step</h4>
+        <li>You have to register a pair of public key and private key for mining and transactions.</li>
+        <li>Your public key is stored in our database.</li>
+        <li>We never store your private key. Please make sure you have saved your private key before going on.</li>
+    </div>
+    {% else %}
+    <div class="alert alert-warning" role="alert">
+      <h4 class="alert-heading">Warning!</h4>
+        <p>The mining rewards only goes to THE MOST RECENTLY generate public key of this account !!! That means oonce you generate another new wallet, the old wallets can't receive rewards anymore !!! </p>
+        <hr>
+      <p class="mb-0">However,the old wallets can still execute transactions.</p>
+    </div>
+    {% endif %}
+      <div class="row">
+        <div class="col-lg-12 text-center">
+        
+
+          <div class="card-body">
+            <h4 class="card-title">Wallet Generator</h4>
+            <p class="card-text">Click on the button below to generate your blockchain wallet</p>
+            <input type="button" class="btn btn-primary btn-lg" value="Generate Wallet">
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <br>
+
+    <div class="container">
+
+        <div class="row">
+          <label class="col-sm-2">Public Key:</label>
+          <div class="col-sm-10">
+            <textarea id="public_key" rows="5" class="form-control" readonly></textarea>
+          </div>
+        </div>
+
+        <br>
+        
+        <div class="row">
+          <label class="col-sm-2">Private Key:</label>
+          <div class="col-sm-10">
+            <textarea id="private_key" rows="5" class="form-control" readonly></textarea>
+          </div>
+        </div>
+
+        <br>
+
+        <div class="row" id="warning" style="display:none">
+          <div class="col-sm-12">
+            <div class="alert alert-danger" role="alert">
+              IMPORTANT
+              <ul>
+                <li>Save you private and public keys. These keys cannot be recovered!</li>
+                <li>Don't share your private key with anyone!</li>
+              </ul> 
+            </div>
+          </div>
+        </div>
+
+    </div>
+
+
+
+
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="/static/vendor/jquery/jquery.min.js"></script>
+    <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+    <script>
+
+      $(function(){
+        $('input').click(function(){
+
+          $.ajax({
+            url: '/wallet/new',
+            type: 'GET',
+            success: function(response){
+              document.getElementById("private_key").innerHTML = response['private_key'];
+              document.getElementById("public_key").innerHTML = response['public_key'];
+              document.getElementById("warning").style.display = "block";
+            },
+            error: function(error){
+              console.log(error);
+            }
+          });
+        });
+      })
+
+
+    </script>
+
+{%endblock%}
