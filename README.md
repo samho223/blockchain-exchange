@@ -1,1 +1,1 @@
-This is a project refernecenced from adilmoujahid/blockchain-python-tutorial, and miguelgrinberg/microblog.
+- This is a project referenced from [adilmoujahid/blockchain-python-tutorial](https://github.com/adilmoujahid/blockchain-python-tutorial), and [miguelgrinberg/microblog](https://github.com/adilmoujahid/blockchain-python-tutorial).
