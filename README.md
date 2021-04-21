@@ -1,10 +1,10 @@
 # Introduction
 - This is a project referenced from [adilmoujahid/blockchain-python-tutorial](https://github.com/adilmoujahid/blockchain-python-tutorial), and [miguelgrinberg/microblog](https://github.com/adilmoujahid/blockchain-python-tutorial).
 - appllicable to Python>=3.6
-- This application is for demostrations only.
+- This Web application is for demostrations only.
 # Features
-- Flask based blockchain exchange API
-- sqlalchemy orm database for user and transactions.
+- a Flask based blockchain exchange 
+- sqlalchemy ORM database for user and transactions.
 
 # Usage
 1. Create a virtual enviroment in your targeted dirtionary.
